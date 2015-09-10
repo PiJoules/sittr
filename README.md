@@ -1,5 +1,5 @@
 # sittr
-Sittr solves the problem of knowing when you're not holding your phone.
+Sittr solves the problem of knowing if your phone is sitting or being held.
 
 Inspired by [holdr](https://github.com/starakaj/holdr).
 
