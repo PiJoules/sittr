@@ -36,7 +36,7 @@ else if ( (md.os() || "").toLowerCase().indexOf("windows") > -1 ){
 	$(".message").html("You are using a Windows phone. I am sorry.");
 }
 else if (!md.phone()){
-	$(".message").html("This device is not a phone, but since you're here, why not view the <a href='https://github.com/PiJoules/sittr'>source code</a>.");
+	$(".message").html("This website is meant to be viewed on a phone, but since you're here, why not view the <a href='https://github.com/PiJoules/sittr'>source code</a>.");
 }
 else {
 	// Listen for the event and handle DeviceOrientationEvent object
