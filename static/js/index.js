@@ -3,7 +3,7 @@ var md = new MobileDetect(window.navigator.userAgent);
 // Static values
 var Sittr_DROP_ACCEL_THRESHOLD = 0.09;
 var Sittr_MINIMUM_DROP_TIME = 0.1;
-var Sittr_STILLNESS_THRESHOLD = 0.025;
+var Sittr_STILLNESS_THRESHOLD = 0.020;
 var Sittr_BUMP_THRESHOLD = 0.1;
 
 // Holding states
@@ -20,20 +20,23 @@ var aY = null;
 var aZ = null;
 var alpha = 0.5;
 
+$.get("/rand", function(response){
+	$("body").css("background-image", "url(" + response + ")");
+});
 
-// Timers
-var startHoldingTimer = null;
-var stopHoldingTimer = null;
-var droppingTimer = null;
+
+var buffer = 500;
+var justStarted, justStopped = false;
+
 
 if (!window.DeviceMotionEvent) {
-	$(".message").text("DeviceMotionEvent is not supported.");
+	$(".message").html("DeviceMotionEvent is not supported, but since you're here, why not view the <a href='https://github.com/PiJoules/sittr'>source code</a>.");
 }
 else if ( (md.os() || "").toLowerCase().indexOf("windows") > -1 ){
-	$(".message").text("You are using a Windows phone. I am sorry.");
+	$(".message").html("You are using a Windows phone. I am sorry.");
 }
 else if (!md.phone()){
-	$(".message").text("This device is not a phone.");
+	$(".message").html("This device is not a phone, but since you're here, why not view the <a href='https://github.com/PiJoules/sittr'>source code</a>.");
 }
 else {
 	// Listen for the event and handle DeviceOrientationEvent object
@@ -85,24 +88,41 @@ else {
 function startDropping(){
 	if (phoneState !== SittrPhoneState_t.SittrPhoneState_Dropping){
 		phoneState = SittrPhoneState_t.SittrPhoneState_Dropping;
-		$(".message").text("Dropping");
+		$(".message").html("Dropping");
 	}
 }
 
 function startHolding(){
-	if (phoneState === SittrPhoneState_t.SittrPhoneState_Dropping)
-		return;
-	if (phoneState !== SittrPhoneState_t.SittrPhoneState_Holding){
-		phoneState = SittrPhoneState_t.SittrPhoneState_Holding;
-		$(".message").text("The phone is being held.");
+	if (!justStarted){
+		if (phoneState === SittrPhoneState_t.SittrPhoneState_Dropping)
+			return;
+		if (phoneState !== SittrPhoneState_t.SittrPhoneState_Holding){
+			phoneState = SittrPhoneState_t.SittrPhoneState_Holding;
+			$(".message").html("");
+			$("body").css("background-size", "cover");
+			justStarted = true;
+			setTimeout(function(){
+				justStarted = false;
+			}, buffer);
+		}
 	}
 }
 
 function stopHolding(){
-	if (phoneState === SittrPhoneState_t.SittrPhoneState_Dropping)
-		return;
-	if (phoneState !== SittrPhoneState_t.SittrPhoneState_NotHolding){
-		phoneState = SittrPhoneState_t.SittrPhoneState_NotHolding;
-		$(".message").text("The phone is sitting.");
+	if (!justStopped){
+		if (phoneState === SittrPhoneState_t.SittrPhoneState_Dropping)
+			return;
+		if (phoneState !== SittrPhoneState_t.SittrPhoneState_NotHolding){
+			phoneState = SittrPhoneState_t.SittrPhoneState_NotHolding;
+			$(".message").html("The phone is sitting.");
+			$("body").css("background-size", "0");
+			$.get("/rand", function(response){
+				$("body").css("background-image", "url(" + response + ")");
+			});
+			justStopped = true;
+			setTimeout(function(){
+				justStopped = false;
+			}, buffer);
+		}
 	}
 }
