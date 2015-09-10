@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Title go here</title>
+		<title>Is your phone sitting?</title>
+
+		<style type="text/css">
+		.Absolute-Center {
+			width: 400px;
+			height: 100px;
+			margin-left: -200px;
+			margin-top: -50px;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+		}
+		.message {
+			text-align: center;
+		}
+		</style>
 	</head>
-	<body>
-		<h1>Hello world!</h1>
+	<body style="">
+		<h1 class="Absolute-Center message">
+			Hello
+		</h1>
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='js/mobile-detect.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
 	</body>
 </html>
